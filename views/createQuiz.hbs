@@ -1,0 +1,85 @@
+{{>navBarTeacher}}
+<div class="btn-group ml-3" role="group">
+  <a href="#addQuestions" class="btn btn-success">
+    Add Question
+    <i class="fas fa-question  mr-1"></i>
+  </a>
+</div>
+<div class="container mt-5 ml-3">
+  <h4 class="mb-2">All Questions (Dummy)</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Questions</th>
+        <th>Marks</th>
+        <th>Actions</th>
+        <th>CorrectOption</th>
+        <th>StartTime</th>
+        <th>EndTime</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Can you name two programming paradigms important for JavaScript app developers?</td>
+        <td>10</td>
+        <td>
+          <button class="btn btn-dark btn-sm" style="margin: 1px;">Remove</button>
+          <button class="btn btn-success btn-sm" style="margin: 1px;">Edit</button>
+          <button class="btn btn-danger btn-sm" style="margin: 1px;">Delete</button>
+        </td>
+        <td>A</td>
+        <td>dummy time 4.00</td>
+        <td>dummy time 5.00</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>What are two-way data binding and one-way data flow, and how are they different?</td>
+        <td>10</td>
+        <td>
+          <button class="btn btn-dark btn-sm" style="margin: 1px;">Remove</button>
+          <button class="btn btn-success btn-sm" style="margin: 1px;">Edit</button>
+          <button class="btn btn-danger btn-sm" style="margin: 1px;">Delete</button>
+        </td>
+        <td>B</td>
+        <td>dummy time 4.00</td>
+        <td>dummy time 5.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<button class="btn btn-success btn-lg" style="border-radius: 2rem; margin-left: 560px;"> Publish Quiz</button>
+<hr>
+<div class="container" id="addCourse" style="margin-top: 50px">
+  <div class="row">
+    <div class="col-md-8 m-auto">
+      <h1 class="display-4 text-center">Add Your Questions</h1>
+      <small class="d-block pb-3">* required field</small>
+      <form action="#" onsubmit="addcol()">
+        <div class="form-group">
+          <input type="number" class="form-control form-control-lg" placeholder="*Question number " name="question"
+            required />
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control form-control-lg" placeholder="*Question" name="Id" required />
+        </div>
+        <div class="form-group">
+          <input type="number" class="form-control form-control-lg" placeholder="*Max Marks " name="question-marks"
+            required />
+        </div>
+        <div class="form-group">
+          <input type="time" class="form-control form-control-lg" placeholder="*time.. " name="start time" required />
+        </div>
+        <div class="form-group">
+          <input type="time" class="form-control form-control-lg" placeholder="*time.. " name="end time" required />
+        </div>
+        <div class="form-group">
+          <input class="form-control form-control-lg" placeholder="*Correct option" name="correct-option"
+            required></input>
+        </div>
+        <input type="submit" class="btn btn-info btn-block mt-4" />
+      </form>
+    </div>
+  </div>
+  {{>footer}}

@@ -1,0 +1,79 @@
+{{>navBarTeacher}}
+<div class="dashboard">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="display-4">Dashboard</h1>
+        <p class="lead text-muted">Welcome Teacher</p>
+        <div class="btn-group mb-4" role="group">
+          <a href="#addCourse" class="btn btn-light">
+            <i class="fas fa-book text-info mr-1"></i>
+            Add Courses</a>
+        </div>
+
+        <div>
+          <h4 class="mb-2">Dummy Courses</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Course Id</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Front End Web Dev</td>
+                <td>FWeb100</td>
+                <td>
+                  <button class="btn btn-dark">Remove</button>
+                  <button class="btn btn-success">Edit</button>
+                  <button class="btn btn-danger">Delete</button>
+                  <a href="/teacher/create-quiz" class="btn btn-primary">Create Quiz</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Back End Web Dev</td>
+                <td>BWeb101</td>
+                <td>
+                  <button class="btn btn-dark">Remove</button>
+                  <button class="btn btn-success">Edit</button>
+                  <button class="btn btn-danger">Delete</button>
+                  <a href="/teacher/create-quiz" class="btn btn-primary">Create Quiz</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr />
+
+        <div class="container" id="addCourse" style="margin-top: 50px">
+          <div class="row">
+            <div class="col-md-8 m-auto">
+              <h1 class="display-4 text-center">Add Your Courses</h1>
+              <small class="d-block pb-3">* required field</small>
+              <form action="#" onsubmit="addcol()">
+                <div class="form-group">
+                  <input type="text" class="form-control form-control-lg" placeholder="* Course Name" name="course"
+                    required />
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control form-control-lg" placeholder="* Course Id" name="Id"
+                    required />
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control form-control-lg" placeholder="Course Description"
+                    name="description"></textarea>
+                  <small class="form-text text-muted">Tell us about the course</small>
+                </div>
+                <input type="submit" class="btn btn-info btn-block mt-4" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{>footer}}

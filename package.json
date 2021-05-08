@@ -1,0 +1,31 @@
+{
+  "name": "adaptive-learning-platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "nodemon ./index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahulray1406/Adaptive-learning-platform.git"
+  },
+  "author": "Rahul Ray",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rahulray1406/Adaptive-learning-platform/issues"
+  },
+  "homepage": "https://github.com/rahulray1406/Adaptive-learning-platform#readme",
+  "dependencies": {
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.2",
+    "express-session": "^1.17.1",
+    "handlebars-helpers": "^0.10.0",
+    "memorystore": "^1.6.6",
+    "mongodb": "^3.6.6",
+    "mongoose": "^5.12.7",
+    "passport": "^0.4.1"
+  }
+}

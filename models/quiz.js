@@ -1,0 +1,40 @@
+const mongoose=require("mongoose");
+const questions=mongoose.Schema({
+    courseID:{
+        type:Number,
+        required:true,
+        unique:true,
+    },
+    questionDesc:{
+        type:String,
+        trim:true,
+        required:true
+    },
+    options:{
+      type:Array,
+        require:true
+    },
+    correctOps:{
+        type:Array,
+        required:true
+    },
+    points:{
+        type:Number,
+        require:true,
+        default:null
+    },
+    createdOn:{
+        type:Date,
+        //required:true,
+        default:Date.now
+    },
+    expireOn:{
+        type:Date,
+        //required:true,
+        default:Date.now
+    }
+},
+{collection : 'questions'}
+)
+mongoose.model('questions',questions);
+module.exports=mongoose.model("questions");
