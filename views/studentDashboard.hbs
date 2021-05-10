@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-12">
         <h1 class="display-4">Dashboard</h1>
-        <p class="lead text-muted">Welcome Student</p>
+        <p class="lead text-muted">Welcome Yaha Student Id hoga</p>
 
         <div>
           <h4 class="mb-2">My Dummy Courses</h4>
@@ -14,24 +14,30 @@
                 <th>Course Name</th>
                 <th>Course Id</th>
                 <th>Actions</th>
+                <th>Quiz Status</th>
               </tr>
             </thead>
             <tbody>
+              {{#each course}}
               <tr>
-                <td>Front End Web Dev</td>
-                <td>FWeb100</td>
-                <td>
+                <td>{{this.courseName}}</td>
+                <td>{{this.courseID}}</td>
 
-                  <a href="take-quiz" class="btn btn-primary">Take Quiz</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Back End Web Dev</td>
-                <td>BWeb101</td>
                 <td>
-                  <a href="take-quiz" class="btn btn-primary">Take Quiz</a>
+                  <a href="takeQuiz?courseID={{this.courseID}}" class="btn btn-primary">Take Quiz</a>
+                </td>
+                <td>
+                  {{#if this.quizActive}}
+                  <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal"
+                    disabled>Active</button>
+                  {{else}}
+                  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#editModal"
+                    disabled>In
+                    Active</button>
+                  {{/if}}
                 </td>
               </tr>
+              {{/each}}
             </tbody>
           </table>
         </div>

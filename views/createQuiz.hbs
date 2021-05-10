@@ -6,7 +6,7 @@
   </a>
 </div>
 <div class="container mt-5 ml-3">
-  <h4 class="mb-2">All Questions (Dummy)</h4>
+  <h4 class="mb-2">All Questions</h4>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -14,72 +14,154 @@
         <th>Questions</th>
         <th>Marks</th>
         <th>Actions</th>
+        <th>Options</th>
         <th>CorrectOption</th>
-        <th>StartTime</th>
-        <th>EndTime</th>
       </tr>
     </thead>
     <tbody>
+      {{#each questions}}
       <tr>
-        <td>1</td>
-        <td>Can you name two programming paradigms important for JavaScript app developers?</td>
-        <td>10</td>
+        <td>{{this.questionID}}</td>
+        <td>{{this.questionDesc}}</td>
+        <td>{{this.points}}</td>
         <td>
-          <button class="btn btn-dark btn-sm" style="margin: 1px;">Remove</button>
-          <button class="btn btn-success btn-sm" style="margin: 1px;">Edit</button>
-          <button class="btn btn-danger btn-sm" style="margin: 1px;">Delete</button>
+          <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+            data-target="#editModal">Edit</button>
+          <a href="/teacher/deleteQuestion?id={{this.questionID}}&cid={{this.courseID}}"
+            class=" btn btn-danger btn-sm">Delete</a>
         </td>
-        <td>A</td>
-        <td>dummy time 4.00</td>
-        <td>dummy time 5.00</td>
+        <td>{{this.options}}</td>
+        <td>{{this.correctOps}}</td>
       </tr>
-      <tr>
-        <td>2</td>
-        <td>What are two-way data binding and one-way data flow, and how are they different?</td>
-        <td>10</td>
-        <td>
-          <button class="btn btn-dark btn-sm" style="margin: 1px;">Remove</button>
-          <button class="btn btn-success btn-sm" style="margin: 1px;">Edit</button>
-          <button class="btn btn-danger btn-sm" style="margin: 1px;">Delete</button>
-        </td>
-        <td>B</td>
-        <td>dummy time 4.00</td>
-        <td>dummy time 5.00</td>
-      </tr>
+      {{/each}}
     </tbody>
   </table>
 </div>
-<button class="btn btn-success btn-lg" style="border-radius: 2rem; margin-left: 560px;"> Publish Quiz</button>
+<center>
+  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#publishModal">Publish
+    Quiz</button>
+</center>
 <hr>
-<div class="container" id="addCourse" style="margin-top: 50px">
+<div class="container" id="addQuestions" style="margin-top: 50px">
   <div class="row">
     <div class="col-md-8 m-auto">
       <h1 class="display-4 text-center">Add Your Questions</h1>
       <small class="d-block pb-3">* required field</small>
-      <form action="#" onsubmit="addcol()">
+      <form method="post" action="addQuestion">
+        {{!-- <div class="form-group">
+          <input type="number" class="form-control form-control-lg" placeholder="*Question number " name="questionnum"
+            required />
+        </div> --}}
         <div class="form-group">
-          <input type="number" class="form-control form-control-lg" placeholder="*Question number " name="question"
+          <input type="number" name="courseid" value={{courseID}} readonly />
+          <input type="text" class="form-control form-control-lg" placeholder="*Question" name="questionDesc"
             required />
         </div>
         <div class="form-group">
-          <input type="text" class="form-control form-control-lg" placeholder="*Question" name="Id" required />
-        </div>
-        <div class="form-group">
-          <input type="number" class="form-control form-control-lg" placeholder="*Max Marks " name="question-marks"
+          <input type="number" class="form-control form-control-lg" placeholder="*Max Marks " name="maxMarks"
             required />
         </div>
+        <div id="moreOptions"></div>
         <div class="form-group">
-          <input type="time" class="form-control form-control-lg" placeholder="*time.. " name="start time" required />
-        </div>
-        <div class="form-group">
-          <input type="time" class="form-control form-control-lg" placeholder="*time.. " name="end time" required />
-        </div>
-        <div class="form-group">
-          <input class="form-control form-control-lg" placeholder="*Correct option" name="correct-option"
+          <input type="number" class="form-control form-control-lg" placeholder="*Correct option" name="correctOps"
             required></input>
         </div>
-        <input type="submit" class="btn btn-info btn-block mt-4" />
+        <div id="correctOps"></div>
+
+        <input type="submit" class="btn btn-info btn-sm mt-4" />
+        <button class="btn btn-info btn-sm mt-4" onclick="appendIp()">Add options</button>
+        <button class="btn btn-info btn-sm mt-4" onclick="appendCorrect()">Add Correct options</button>
+
       </form>
     </div>
   </div>
+  {{!--publish moal --}}
+  <div class="modal fade" id="publishModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title lead" id="publishModalLabel">Update Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="publishQuiz">
+            <div class="form-group">
+              <label for="course-name" class="col-form-label">Course ID:</label>
+              <input type="Number" class="form-control" name="cid" id="cid" value={{courseID}} readonly>
+            </div>
+            <div class="form-group">
+              <label for="course-name" class="col-form-label">Start Time:</label>
+              <input type="datetime-local" class="form-control" name="startTime" id="startTime">
+            </div>
+            <div class="form-group">
+              <label for="course-name" class="col-form-label">End Time:</label>
+              <input type="datetime-local" class="form-control" name="endTime" id="endTime">
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Publish</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{!-- edit modal --}}
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title lead" id="editModalLabel">Update Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="editQuestions">
+            <div class="form-group">
+              <label for="course-name" class="col-form-label">Course ID:</label>
+              <input type="Number" class="form-control" name="cid" id="cid" value={{courseID}} readonly>
+            </div>
+            <div class="form-group">
+              <label for="course-name" class="col-form-label">Question ID</label>
+              <input type="Number" class="form-control" name="questionid" id="questionid">
+            </div>
+            <div class="form-group">
+              <label for="course-name" class="col-form-label">Question</label>
+              <input type="text" class="form-control form-control-lg" placeholder="*Question" name="questionDesc"
+                required />
+            </div>
+            <div class="form-group">
+              <input type="number" class="form-control form-control-lg" placeholder="*Max Marks " name="maxMarks"
+                required />
+            </div>
+            <div class="form-group">
+              <input class="form-control form-control-lg" placeholder="*Correct option" name="correctOps"
+                required></input>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function appendIp() {
+      console.log("add option called")
+      let more = document.getElementById("moreOptions");
+      more.innerHTML += (`<div class="form-group" >
+          <input type="text" class="form-control form-control-lg" placeholder="*Options " name="options" required />
+        </div>`)
+    }
+
+    function appendCorrect() {
+      console.log("add Correct option called")
+      let more = document.getElementById("correctOps");
+      more.innerHTML += (`<div class="form-group" >
+          <input type="number" class="form-control form-control-lg" placeholder="*Correct Options " name="correctOps" required />
+        </div>`)
+    }
+  </script>
   {{>footer}}

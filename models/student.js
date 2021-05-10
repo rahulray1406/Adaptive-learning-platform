@@ -19,13 +19,17 @@ const student = mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-        default: ""
+        default: "",
+        unique:true
     },
 
     points: {
         type: Number,
         require: true,
         default: null
+    },
+    profilePicture:{
+        type:String
     },
     expPoints: {
         type: Number,

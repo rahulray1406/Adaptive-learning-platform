@@ -1,36 +1,36 @@
-const mongoose=require("mongoose");
-const teacher=mongoose.Schema({
-    teacherID:{
-        type:Number,
-        required:true,
-        unique:true,
+const mongoose = require("mongoose");
+const teacher = mongoose.Schema({
+    teacherID: {
+        type: Number,
+        required: true,
+        unique: true,
     },
-    fname:{
-        type:String,
-        trim:true,
-        required:true
+    fname: {
+        type: String,
+        trim: true,
+        required: true
     },
-    lname:{
-        type:String,
-        trim:true,
-        required:true
+    lname: {
+        type: String,
+        trim: true,
+        required: true
     },
-    email:{
-      type:String,
-      trim:true,
-    required:true,
-      default:""
+    profilePicture: {
+        type: String
     },
-    createdOn:{
-        type:Date,
-        default:Date.now
+    email: {
+        type: String,
+        trim: true,
+        required: true,
+        default: "",
+        unique: true
     },
-    courses:{
-        type:Array,
-        require:true,
-    },
+    createdOn: {
+        type: Date,
+        default: Date.now
+    }
 },
-{collection : 'teacher'}
+    { collection: 'teacher' }
 )
-mongoose.model('teacher',teacher);
-module.exports=mongoose.model("teacher");
+mongoose.model('teacher', teacher);
+module.exports = mongoose.model("teacher");

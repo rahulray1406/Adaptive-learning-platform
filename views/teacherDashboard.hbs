@@ -4,44 +4,50 @@
     <div class="row">
       <div class="col-md-12">
         <h1 class="display-4">Dashboard</h1>
-        <p class="lead text-muted">Welcome Teacher</p>
+        <p class="lead text-muted">Welcome Yaha Teacher ID aayega</p>
+        <p>Student connented with this teacher ID</p>
         <div class="btn-group mb-4" role="group">
-          <a href="#addCourse" class="btn btn-light">
+          <a href="#addCourse" class="btn btn-dark">
             <i class="fas fa-book text-info mr-1"></i>
             Add Courses</a>
         </div>
 
         <div>
-          <h4 class="mb-2">Dummy Courses</h4>
+          <h4 class="mb-2">Your Courses</h4>
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Course Name</th>
                 <th>Course Id</th>
+                <th>Course Name</th>
+                <th>Quiz Status</th>
                 <th>Actions</th>
+
               </tr>
             </thead>
             <tbody>
+              {{#each courses}}
               <tr>
-                <td>Front End Web Dev</td>
-                <td>FWeb100</td>
+                <td>{{this.courseID}}</td>
+                <td>{{this.courseName}}</td>
                 <td>
-                  <button class="btn btn-dark">Remove</button>
-                  <button class="btn btn-success">Edit</button>
-                  <button class="btn btn-danger">Delete</button>
-                  <a href="/teacher/create-quiz" class="btn btn-primary">Create Quiz</a>
+                  {{#if this.quizActive}}
+                  <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal"
+                    disabled>Active</button>
+                  {{else}}
+                  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#editModal"
+                    disabled>In
+                    Active</button>
+                  {{/if}}
+                </td>
+                <td>
+                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal">Edit
+                  </button>
+                  <a href="/teacher/deleteCourse?id={{this.courseID}}" class="btn btn-danger btn-sm">Delete </a>
+                  <a href="/teacher/createQuiz?id={{this.courseID}}" class="btn btn-primary btn-sm">Create Quiz</a>
+
                 </td>
               </tr>
-              <tr>
-                <td>Back End Web Dev</td>
-                <td>BWeb101</td>
-                <td>
-                  <button class="btn btn-dark">Remove</button>
-                  <button class="btn btn-success">Edit</button>
-                  <button class="btn btn-danger">Delete</button>
-                  <a href="/teacher/create-quiz" class="btn btn-primary">Create Quiz</a>
-                </td>
-              </tr>
+              {{/each}}
             </tbody>
           </table>
         </div>
@@ -53,19 +59,10 @@
             <div class="col-md-8 m-auto">
               <h1 class="display-4 text-center">Add Your Courses</h1>
               <small class="d-block pb-3">* required field</small>
-              <form action="#" onsubmit="addcol()">
+              <form method="post" action="addCourse">
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-lg" placeholder="* Course Name" name="course"
+                  <input type="text" class="form-control form-control-lg" placeholder="* Course Name" name="courseName"
                     required />
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control form-control-lg" placeholder="* Course Id" name="Id"
-                    required />
-                </div>
-                <div class="form-group">
-                  <textarea class="form-control form-control-lg" placeholder="Course Description"
-                    name="description"></textarea>
-                  <small class="form-text text-muted">Tell us about the course</small>
                 </div>
                 <input type="submit" class="btn btn-info btn-block mt-4" />
               </form>
@@ -76,4 +73,33 @@
     </div>
   </div>
 </div>
+{{!-- modal --}}
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title lead" id="editModalLabel">Update Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="courseUpdate">
+          <div class="form-group">
+            <label for="course-name" class="col-form-label">Course ID:</label>
+            <input type="Number" class="form-control" name="cid" id="cid" placeholder="Enter the same course ID">
+          </div>
+          <div class="form-group">
+            <label for="course-name" class="col-form-label">Course Name:</label>
+            <input type="text" class="form-control" name="cname" id="cname">
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{>footer}}

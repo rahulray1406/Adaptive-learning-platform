@@ -1,9 +1,56 @@
-<h1>This is my sample page</h1>
-<h2>db fname: {{fname}}</h2>
-<h3>Name: {{name}}</h3>
-<h3>Name: {{id}}</h3>
-<h3>Name: {{course}}</h3>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        {{#each questions}}
+        <hr>
+        <label for="timer"> Timer:</label>
+        <span class="card bg-danger" style="float: right;" id="timer"></span>
+        <form method="POST" action='/ansSubmit'>
+            <p>{{this.questionDesc}}</p>
+            <input style="display: none;" type="number" name="questionNumber" value={{this.questionID}}>
+            <input style="display: none;" type="number" name="courseID" value={{this.courseID}}>
+            <div class="form-group">
+                <label for="course-name" class="col-form-label">Options</label><br>
+                <small><i>*Please tick Correct Options Only</i></small>
+                <hr>
+                {{#each this.options}}
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" name="markedOption">{{this}}
+                    </label>
+                </div>
+                {{/each}}
+            </div>
 
-{{#each people}}
-<li>{{this.fname}}</li>
-{{/each}}
+            <p>correct ans: {{this.correctOps}}</p>
+            <p>Total point: {{this.points}}</p>
+            <button type="button" class="btn btn-secondary">Skip Question</button>
+            <button type="button" onclick="saveAnswer({{this.points}},[{{this.correctOps}}],this)"
+                class="btn btn-success">Save answer</button>
+        </form>
+        <hr>
+        {{/each}}
+    </div>
+</div>
+<script>
+    
+    var sec = 60;
+    var time = setInterval(myTimer, 1000);
+
+    function myTimer() {
+        document.getElementById('timer').innerHTML = sec + " sec left";
+        sec--;
+        if (sec == -1) {
+            clearInterval(time);
+            alert("Time out!! :(");
+        }
+    }
+    
+    function saveAnswer(point, correctAns, curNode) {
+        console.log({ point })
+        console.log({ correctAns });
+        console.log(curNode)
+        console.log(curNode.parentNode)
+    }
+
+
+</script>

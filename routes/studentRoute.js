@@ -3,25 +3,78 @@ const express = require("express");
 const teacher = require("../models/teacher");
 const student = require("../models/student");
 const course = require("../models/course");
-const questions = require("../models/quiz")
+const questions = require("../models/quiz");
+const session = require("express-session");
+var MemoryStore = require('memorystore')(session)
 
 const router = express.Router();
 router.use(express.json({ limit: "50mb" }));
 router.use(express.urlencoded({ extended: true }));
+router.use(session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    secret: "1234asdf",
+    resave: false,
+    saveUninitialized: false,
+    maxAge: 3600000
+}
+))
 //-----Defining all routs-------------
-router.get('/student-login-signup', (req, res) => {
-    res.render("studentLoginSignup")
-});
-router.post('/student-Dashboard', (req, res) => {
-    res.render("studentDashboard")
+router.get('/studentRedirect', (req, res) => {
+    req.session.studentID = Number.parseInt(req.query.id);
+    student.find({ studentID: req.session.studentID }).lean()
+        .then(data => {
+            console.log(data);
+            if (data[0].teacherID == 9999) {
+                return res.render('updateTeacher', {
+                    studentID: req.session.studentID
+                })
+            }
+            req.session.teacherID = data[0].teacherID;
+            res.redirect('Dashboard');
+        })
+        .catch(e => console.log(e))
+})
+
+router.post('/updateTeacherID', (req, res) => {
+    req.session.teacherID = req.body.teacherID
+    console.log(req.body)
+    student.updateOne({ studentID: req.body.studentID }, {
+        teacherID: req.body.teacherID
+    })
+        .then(d => {
+            res.redirect('Dashboard')
+        })
+})
+router.get('/Dashboard', (req, res) => {
+    course.find({ teacherID: req.session.teacherID }).lean()
+        .then(data => {
+            console.log(data);
+            res.render('studentDashboard', {
+                course: data
+            })
+
+        }) 
 });
 router.get('/logout', (req, res) => {
     res.render("landing")
 });
-router.get('/take-quiz', (req, res) => {
-    res.render("takeQuiz")
+router.get('/takeQuiz', (req, res) => {
+    console.log(req.query);
+    let cid = req.query.courseID
+    questions.find({ courseID: Number.parseInt(req.query.courseID) }).lean()
+        .then(d => {
+            console.log("---data----")
+            console.log(d);
+            res.render('takeQuiz', {
+                questions: d
+            })
+        })
 });
-router.get('/leaderboard',(req,res)=>{
+router.get('/leaderboard', (req, res) => {
     res.render("studentLeaderboard")
 });
+
 module.exports = router;
