@@ -37,7 +37,8 @@ router.get('/teacher/Dashboard', (req, res) => {
         .then(data => {
             console.log(data);
             res.render('teacherDashboard', {
-                courses: data
+                courses: data,
+                teacherID: req.session.teacherID
             })
         })
         .catch(err => console.log(err));

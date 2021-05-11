@@ -1,0 +1,32 @@
+{{>navBarStudent}}
+<div class="jumbotron jumbotron-default">
+    <div class="container">
+        <h3 class="display-4">Report for Student Id :{{ reports.studentID}}</h3>
+        <hr>
+        <table class="table table-striped table-dark table-responsive">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>course ID</th>
+                    <th>student ID</th>
+                    <th>Total Marks</th>
+                    <th>Marks Achived</th>
+                    <th>Total Question Attempt</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="row">{{reports.courseID}}</td>
+                        <td scope="row">{{reports.studentID}}</td>
+                        <td scope="row">{{reports.totalMarks}}</td>
+                        <td scope="row">{{reports.marksAchived}}</td>
+                        <td scope="row">{{reports.totalAttempt}}</td>
+                        <td scope="row">{{reports.startTime}}</td>
+                        <td scope="row">{{reports.endTime}}</td>
+                    </tr>
+                </tbody>
+        </table>
+    </div>
+</div>
+{{>footer}}

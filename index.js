@@ -13,6 +13,7 @@ const studentRoute = require("./routes/studentRoute");
 const teacher = require("./models/teacher");
 const student = require("./models/student");
 const course = require("./models/course");
+const reports = require('./models/reports')
 
 const router = require("./routes/teacherRoute");
 const app = express();
@@ -49,6 +50,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/teacherLogin', (req, res) => {
+    req.session.studentTryLogin = false;
     req.session.teacherTryLogin = true;
     console.log(req.session)
     res.redirect('/auth/google')
@@ -56,6 +58,7 @@ app.get('/teacherLogin', (req, res) => {
 
 app.get('/studentLogin', (req, res) => {
     req.session.studentTryLogin = true;
+    req.session.teacherTryLogin = false;
     console.log(req.session)
     res.redirect('/auth/google')
 });
@@ -78,7 +81,22 @@ app.get("/auth/google/success", (req, res) => {
     console.log(req.session)
     console.log(req.user)
     let flag = false;
-    teacher.findById(req.user)
+    if(req.session.studentTryLogin)
+    {
+        console.log("Teacher not fou, find stuent ry")
+        student.findById(req.user)
+            .then(d => {
+                console.log(d);
+                if (!flag) {
+                    req.session.studentTryLogin = false;
+                    return res.redirect('/student/studentRedirect?id=' + d.studentID)
+                }
+            })
+            .catch(e => console.log(e))
+    }
+    else
+    {
+        teacher.findById(req.user)
         .then(d => {
             console.log("teacher found")
             console.log(d);
@@ -89,20 +107,13 @@ app.get("/auth/google/success", (req, res) => {
                 return res.redirect('/teacher/teacherRedirect?id=' + d.teacherID)
             }
             else {
-                console.log("Teacher not fou, find stuent ry")
-                student.findById(req.user)
-                    .then(d => {
-                        console.log(d);
-                        if (!flag) {
-                            req.session.studentTryLogin = false;
-                            return res.redirect('/student/studentRedirect?id=' + d.studentID)
-                        }
-                    })
-                    .catch(e => console.log(e))
+               
             }
 
         })
         .catch(e => console.log(e))
+    }
+    
 })
 app.get('testRedirect', (req, res) => {
     res.send("Redirect successfull")
@@ -118,7 +129,24 @@ app.get("/auth/google/failure", (req, res) => {
 
 app.post('/ansSubmit', (req, res) => {
     console.log(req.body);
-    res.send(true);
+    console.log("----data of ansSubmit-----")
+    console.log(req.body)
+    const newReport = new reports({
+        courseID: req.body.courseID,
+        studentID: req.body.studentID,
+        totalMarks: req.body.totalMarks,
+        totalAttempt: req.body.totalAttempt,
+        marksAchived: req.body.marksAchived,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime
+    });
+    newReport.save()
+        .then(d => {
+            console.log("-data form mongoose--")
+            console.log(d)
+            res.send(d);
+        })
+        .catch(e => console.log(e));
 })
 
 app.listen(80, (req, res) => console.log("server running at :: http://localhost:80"));

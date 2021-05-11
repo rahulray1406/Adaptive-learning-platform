@@ -4,6 +4,7 @@ const teacher = require("../models/teacher");
 const student = require("../models/student");
 const course = require("../models/course");
 const questions = require("../models/quiz");
+const reports = require('../models/reports')
 // const session = require("express-session");
 // var MemoryStore = require('memorystore')(session)
 
@@ -68,16 +69,32 @@ router.get('/student/takeQuiz', (req, res) => {
         .then(d => {
             console.log("---data----")
             console.log(d);
+            var totalMarks = 0;
+            d.forEach(v => {
+                totalMarks += v.points;
+            })
             res.render('takeQuiz', {
-                questions: d
+                questions: d,
+                courseID: cid,
+                studentID: req.session.studentID,
+                totalMarks: totalMarks
             })
         })
 });
-router.post('/student/ansSubmit', (req, res) => {
+router.get('/student/viewReport', (req, res) => {
+    reports.findOne({ courseID: Number.parseInt(req.query.courseID) }).lean()
+        .then(d => {
+            console.log("---report data")
+            console.log(d);
+            res.render('viewReport', {
+                reports: d
+            });
 
+        })
+        .catch(e => console.log(e));
 })
 router.get('/student/leaderboard', (req, res) => {
-    res.render("studentLeaderboard")
+
 });
 
 module.exports = router;

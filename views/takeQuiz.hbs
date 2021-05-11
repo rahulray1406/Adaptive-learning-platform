@@ -1,17 +1,18 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
+          <label for="timer"> Timer:</label>
+        <span class="card bg-danger" style="float: right;" id="timer"></span>
         {{#each questions}}
         <hr>
-        <label for="timer"> Timer:</label>
-        <span class="card bg-danger" style="float: right;" id="timer"></span>
-        <form method="POST" action='/ansSubmit'>
+        <form method="POST" action='/student/ansSubmit'>
+            Question:
             <p>{{this.questionDesc}}</p>
             <input style="display: none;" type="number" name="questionNumber" value={{this.questionID}}>
             <input style="display: none;" type="number" name="courseID" value={{this.courseID}}>
             <div class="form-group">
                 <label for="course-name" class="col-form-label">Options</label><br>
                 <small><i>*Please tick Correct Options Only</i></small>
-                <hr>
+               <br><br>
                 {{#each this.options}}
                 <div class="form-check-inline">
                     <label class="form-check-label">
@@ -21,8 +22,8 @@
                 {{/each}}
             </div>
 
-            <p>correct ans: {{this.correctOps}}</p>
-            <p>Total point: {{this.points}}</p>
+            {{!-- <p>correct ans: {{this.correctOps}}</p>
+            <p>Total point: {{this.points}}</p> --}}
             <button type="button" class="btn btn-secondary">Skip Question</button>
             <button type="button" onclick="saveAnswer({{this.points}},[{{this.correctOps}}],this)"
                 class="btn btn-success">Save answer</button>
@@ -30,12 +31,14 @@
         <hr>
         {{/each}}
     </div>
+   <center> <button class="btn btn-success" onclick="submitQuiz()" type="button">Submit Quiz</button></center>
 </div>
-<script>
-    
+<script defer>
+    var newTime=Date.now();
     var sec = 60;
     var time = setInterval(myTimer, 1000);
-
+    let totalMarks={{totalMarks}};
+   
     function myTimer() {
         document.getElementById('timer').innerHTML = sec + " sec left";
         sec--;
@@ -45,10 +48,13 @@
         }
     }
     let  finalAnswer=0;
+    let totalAt=0;
     function saveAnswer(point, correctAns, curNode) {
+        totalAt++;
         console.log({ point })
         console.log({ correctAns });
         console.log(curNode)
+        curNode.setAttribute("disabled",true);
         console.log(curNode.parentNode)
         let parentForm=curNode.parentNode;
         var container=parentForm.querySelectorAll('input[type="checkbox"]');
@@ -66,6 +72,35 @@
             finalAnswer+=point;
         console.log("Right answer point: "+finalAnswer)
         }
+    }
+    function submitQuiz(){
+        
+    var sendData={
+        courseID:{{courseID}},
+        studentID:{{studentID}},
+        totalMarks:totalMarks,
+        totalAttempt:totalAt,
+        marksAchived:finalAnswer,
+        startTime:newTime,
+        endTime:Date.now(),
+    }
+        fetch('/ansSubmit',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sendData)
+        })
+        .then(d=>d.text())
+        .then(ans=>{
+            console.log(ans);
+            console.log("success rec")
+            window.location.replace('/student/Dashboard')
+        })
+        .catch(e=>{
+            console.log(e)
+            console.log("Error approve")
+        })
     }
 
 
