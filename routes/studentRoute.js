@@ -52,14 +52,26 @@ router.get('/student/Dashboard', (req, res) => {
     course.find({ teacherID: req.session.teacherID }).lean()
         .then(data => {
             console.log(data);
-            res.render('studentDashboard', {
-                course: data,
-                studentID: req.session.studentID
-            })
+            student.find({ studentID: req.session.studentID }).lean()
+                .then(tea => {
+                    console.log("-tea--")
+                    console.log(tea);
+                    res.render('studentDashboard', {
+                        course: data,
+                        studentID: req.session.studentID,
+                        fname: tea[0].fname,
+                        lname: tea[0].lname,
+                        email: tea[0].email,
+                        teacher: tea[0].teacherID,
+                        imgurl: tea[0].profilePicture,
+                        points: tea[0].points
+                    })
+                })
 
         })
 });
 router.get('/student/logout', (req, res) => {
+    req.session.destroy();
     res.render("landing")
 });
 router.get('/student/takeQuiz', (req, res) => {

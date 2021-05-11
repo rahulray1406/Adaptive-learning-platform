@@ -4,10 +4,12 @@
     <div class="row">
       <div class="col-md-12">
         <h1 class="display-4">Dashboard</h1>
-        <p class="lead text-muted">Welcome Teacher Id : {{teacherID}}</p>
-        <p class="lead">Pass this teacher id <b> {{teacherID}} </b>to student for Loging In.
-          Each Student of your's is associated with your ID
-        </p>
+        <center><a href="javascript:;" class="avatar rounded-circle">
+    <img alt="Image placeholder" src="{{imgurl}}">
+</a></center>
+        <p class="lead text-muted">Welcome {{fname}} {{lname}} Teacher ID : {{teacherID}}</p>
+        <p>Pass the Teacher ID to Student for Loging In.</p>
+        <p class="lead text-muted">email: {{email}}</p>
         
         <div class="btn-group mb-4" role="group">
           <a href="#addCourse" class="btn btn-dark">

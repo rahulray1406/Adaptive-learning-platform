@@ -35,11 +35,19 @@ router.get('/teacher/Dashboard', (req, res) => {
     console.log(req.session)
     course.find({ teacherID: req.session.teacherID }).lean()
         .then(data => {
-            console.log(data);
-            res.render('teacherDashboard', {
-                courses: data,
-                teacherID: req.session.teacherID
-            })
+            teacher.find({ teacherID: req.session.teacherID }).lean()
+                .then(tea => {
+                    console.log("-tea--")
+                    console.log(tea);
+                    res.render('teacherDashboard', {
+                        courses: data,
+                        teacherID: req.session.teacherID,
+                        fname: tea[0].fname,
+                        lname: tea[0].lname,
+                        email: tea[0].email,
+                        imgurl: tea[0].profilePicture,
+                    })
+                })
         })
         .catch(err => console.log(err));
 });
@@ -64,14 +72,10 @@ router.post('/teacher/addCourse', (req, res) => {
                 .catch(err => console.log(err));
         })
 
-    // const courseName=req.body.courseName;
-    // const courseID=req.body.courseID;
-    // console.log(courseName);
-    // console.log(courseID);
-    // res.render("teacherDashboard")
 });
 
 router.get('/teacher/logout', (req, res) => {
+    req.session.destroy();
     res.render("landing")
 });
 router.get('/teacher/createQuiz', (req, res) => {
@@ -174,52 +178,5 @@ router.post('/teacher/editQuestions', (req, res) => {
         })
         .catch(er => console.log(er))
 })
-// router.get('/new', (req, res) => {
-//     res.send("Req for teacher router")
-// })    
 
-// router.get('/addNew', (req, res) => {
-//     const nayaTeacher = new teacher({
-//         teacherID: 1,
-//         fname: "Rahul",
-//         lname: "ray",
-//         email: "avi@gamil.com",
-//         courses: [1, 2, 3]
-//     });
-//     nayaTeacher.save()
-//         .then(ans => {
-//             console.log(ans)
-//             res.send(ans);
-//         })
-//         .catch(e => {
-//             console.log(e)
-//             res.send(e);
-//         })
-// })
-
-// router.get('/showAll', (req, res) => {
-//     teacher.find({}).lean()
-//         .then(ans => {
-//             res.send(ans);
-//         })
-//         .catch(e => {
-//             res.send(e)
-//         })
-// })
-
-// router.get('/populate', (req, res) => {
-//     teacher.find({}).lean()
-//         .then(ans => {
-//             res.render('takeQuiz', {
-//                 fname: ans[1].email,
-//                 name: "Rahul",
-//                 id: 1231,
-//                 course: "3 days backend engineer",
-//                 people: ans  
-//             })
-//         })
-//         .catch(e => {
-//             res.send(e)
-//         })
-// })
 module.exports = router;
