@@ -17,8 +17,7 @@ const course = require("./models/course");
 const router = require("./routes/teacherRoute");
 const app = express();
 
-app.use('/teacher', teacherRoute);
-app.use('/student', studentRoute);
+
 
 app.use(session({
     cookie: { maxAge: 86400000 },
@@ -33,7 +32,8 @@ app.use(session({
 ))
 app.use(passport.initialize());
 app.use(passport.session())
-
+app.use(teacherRoute);
+app.use(studentRoute);
 var hbs = expHbs.create({
     extname: "hbs",
     defaultLayout: "main",
@@ -116,9 +116,9 @@ app.get("/auth/google/failure", (req, res) => {
     res.send("login Failed XXXXX")
 })
 
-app.post('/ansSubmit',(req,res)=>{
+app.post('/ansSubmit', (req, res) => {
     console.log(req.body);
     res.send(true);
 })
 
-app.listen(80, (req, res) => console.log("server running at :: http://localhost"));
+app.listen(80, (req, res) => console.log("server running at :: http://localhost:80"));

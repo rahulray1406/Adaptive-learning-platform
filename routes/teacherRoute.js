@@ -4,30 +4,20 @@ const teacher = require("../models/teacher");
 const student = require("../models/student");
 const course = require("../models/course");
 const questions = require("../models/quiz")
-const session = require("express-session");
-var MemoryStore = require('memorystore')(session)
+// const session = require("express-session");
+// var MemoryStore = require('memorystore')(session)
 
 const router = express.Router();
 router.use(express.json({ limit: "50mb" }));
 router.use(express.urlencoded({ extended: true }));
-router.use(session({
-    cookie: { maxAge: 86400000 },
-    store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-    }),
-    secret: "1234asdf",
-    resave: false,
-    saveUninitialized: false,
-    maxAge: 3600000
-}
-))
+
 //------Defining all routs-----------
-router.get('/teacherRedirect', (req, res) => {
+router.get('/teacher/teacherRedirect', (req, res) => {
     console.log("Teacher entery redirect")
     console.log(req.query)
-    req.session.teacherID = Number.parseInt( req.query.id);
+    req.session.teacherID = Number.parseInt(req.query.id);
     console.log(req.session)
-    res.redirect('Dashboard');
+    res.redirect('/teacher/Dashboard');
     // teacher.find({ teacherID: req.session.teacherID }).lean()
     //     .then(data => {
     //         console.log(data);
@@ -37,7 +27,7 @@ router.get('/teacherRedirect', (req, res) => {
     //     })
     //     .catch(e => console.log(e))
 })
-router.get('/Dashboard', (req, res) => {
+router.get('/teacher/Dashboard', (req, res) => {
     // const courseName=req.query.courseName;
     // const courseID=req.query.courseID;
     // console.log(courseName);
@@ -52,7 +42,7 @@ router.get('/Dashboard', (req, res) => {
         })
         .catch(err => console.log(err));
 });
-router.post('/addCourse', (req, res) => {
+router.post('/teacher/addCourse', (req, res) => {
     let newreq;
     console.log(req.session)
 
@@ -68,7 +58,7 @@ router.post('/addCourse', (req, res) => {
             newCourse.save()
                 .then(data => {
                     console.log(data);
-                    res.redirect("Dashboard")
+                    res.redirect("/teacher/Dashboard")
                 })
                 .catch(err => console.log(err));
         })
@@ -80,10 +70,10 @@ router.post('/addCourse', (req, res) => {
     // res.render("teacherDashboard")
 });
 
-router.get('/logout', (req, res) => {
+router.get('/teacher/logout', (req, res) => {
     res.render("landing")
 });
-router.get('/createQuiz', (req, res) => {
+router.get('/teacher/createQuiz', (req, res) => {
     console.log(req.query)
     questions.find({ courseID: Number.parseInt(req.query.id) }).lean()
         .then(d => {
@@ -95,7 +85,7 @@ router.get('/createQuiz', (req, res) => {
         })
 });
 
-router.post('/addQuestion', (req, res) => {
+router.post('/teacher/addQuestion', (req, res) => {
     console.log(req.body)
     let newreq;
     questions.aggregate([{ $group: { _id: null, maxid: { $max: "$questionID" } } }])
@@ -115,19 +105,19 @@ router.post('/addQuestion', (req, res) => {
                     console.log(data);
                 })
                 .catch(err => console.log(err));
-            res.redirect("createQuiz?id=" + req.body.courseid)
+            res.redirect("/teacher/createQuiz?id=" + req.body.courseid)
         })
 
 });
-router.get('/deleteCourse', (req, res) => {
+router.get('/teacher/deleteCourse', (req, res) => {
     let cid = req.query.id;
     course.deleteOne({ courseID: Number.parseInt(cid) })
         .then(ans => {
             console.log(ans)
-            res.redirect('Dashboard')
+            res.redirect('/teacher/Dashboard')
         })
 })
-router.get('/deleteQuestion', (req, res) => {
+router.get('/teacher/deleteQuestion', (req, res) => {
     console.log("req body----------------")
 
     console.log(req.query)
@@ -136,10 +126,10 @@ router.get('/deleteQuestion', (req, res) => {
     questions.deleteOne({ questionID: Number.parseInt(req.query.id) })
         .then(ans => {
             console.log(ans)
-            res.redirect('createQuiz?id=' + req.query.cid)
+            res.redirect('/teacher/createQuiz?id=' + req.query.cid)
         })
 })
-router.post('/publishQuiz', (req, res) => {
+router.post('/teacher/publishQuiz', (req, res) => {
     console.log("course update called-----------------------")
     console.log(req.body)
     course.updateOne({ courseID: Number.parseInt(req.body.cid) }, {
@@ -151,12 +141,12 @@ router.post('/publishQuiz', (req, res) => {
         .then(data => {
             // console.log("--data----------")
             // console.log(data)
-            res.redirect('createQuiz?id=' + req.body.cid)
+            res.redirect('/teacher/createQuiz?id=' + req.body.cid)
         })
         .catch(er => console.log(er))
 })
 
-router.post('/courseUpdate', (req, res) => {
+router.post('/teacher/courseUpdate', (req, res) => {
     console.log("course update called-----------------------")
     console.log(req.body)
     course.updateOne({ courseID: Number.parseInt(req.body.cid) }, {
@@ -165,11 +155,11 @@ router.post('/courseUpdate', (req, res) => {
         .then(data => {
             // console.log("--data----------")
             // console.log(data)
-            res.redirect('Dashboard')
+            res.redirect('/teacher/Dashboard')
         })
         .catch(er => console.log(er))
 })
-router.post('/editQuestions', (req, res) => {
+router.post('/teacher/editQuestions', (req, res) => {
     console.log("course update called-----------------------")
     console.log(req.query)
     questions.updateOne({ questionID: Number.parseInt(req.body.questionid) }, {
@@ -179,7 +169,7 @@ router.post('/editQuestions', (req, res) => {
         correctOps: req.body.correctOps,
     })
         .then(data => {
-            res.redirect('createQuiz?id=' + req.body.cid)
+            res.redirect('/teacher/createQuiz?id=' + req.body.cid)
         })
         .catch(er => console.log(er))
 })

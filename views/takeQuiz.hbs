@@ -44,12 +44,28 @@
             alert("Time out!! :(");
         }
     }
-    
+    let  finalAnswer=0;
     function saveAnswer(point, correctAns, curNode) {
         console.log({ point })
         console.log({ correctAns });
         console.log(curNode)
         console.log(curNode.parentNode)
+        let parentForm=curNode.parentNode;
+        var container=parentForm.querySelectorAll('input[type="checkbox"]');
+        console.log(correctAns)
+        let wrong=false;
+        container.forEach((node,index)=>{
+            console.log(node.checked,index)
+            if(node.checked==false && correctAns.includes(index+1)){
+                console.log('wrong answer')
+                wrong=true;
+                return;
+            }  
+        })
+        if(wrong==false){
+            finalAnswer+=point;
+        console.log("Right answer point: "+finalAnswer)
+        }
     }
 
 
